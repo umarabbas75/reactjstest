@@ -5,14 +5,22 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
-
-
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+const theme = createTheme();
 
 ReactDOM.render(
   <React.StrictMode>
-   
+    <CssBaseline />
     <Provider store={store}>
-    <App />
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" component={App} />
+        </Switch>
+      </BrowserRouter>
+      </ThemeProvider>
     </Provider>
     
   </React.StrictMode>,
