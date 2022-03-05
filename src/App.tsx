@@ -1,8 +1,9 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
+import './App.css';
+import { useTypedSelector } from './hooks/useTypeSelector';
 function App() {
+  const {logInUser } = useTypedSelector((state) => state.auth);
+  console.log('=======logInUser=========',logInUser)
   return (
     <div className="App">
         hello world
