@@ -1,4 +1,4 @@
-import React , {useEffect} from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Table from "@mui/material/Table";
@@ -8,46 +8,30 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import axios from 'axios';
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getAllPosts } from "../redux/actionCreators/posts";
 import { useTypedSelector } from "../hooks/useTypeSelector";
-
+import Button from "@mui/material/Button";
+import { useHistory } from "react-router-dom";
+import AddPostModal from './AddPostModal'
 export default function Album() {
-  
-  const dispatch = useDispatch()
-  const {getting_posts,posts } = useTypedSelector((state) => state.posts);
-
-  const rows = [
-    {
-      id: 1,
-      userId: 1,
-      title:
-        "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    },
-    {
-      id: 2,
-      userId: 2,
-      title: "qui est esse",
-    },
-    {
-      id: 3,
-      userId: 3,
-      title: "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-    },
-  ];
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { getting_posts, posts } = useTypedSelector((state) => state.posts);
 
   useEffect(() => {
-    const fetchPosts = async ()=>{
+    const fetchPosts = async () => {
       await dispatch(getAllPosts());
-    }
-    fetchPosts()
-  }, [])
-  
+    };
+    fetchPosts();
+  }, []);
+  const addPost = () => {
+    history.push("/addPost");
+  };
 
   return (
     <>
-    
       <main>
         <Box
           sx={{
@@ -56,38 +40,46 @@ export default function Album() {
             pb: 6,
           }}
         >
-       <Container maxWidth="md">
+          <Container maxWidth="md" sx={{ minWidth: 650 }}>
+            {/* <Button
+              variant="contained"
+              sx={{ marginBottom: "10px" }}
+              onClick={addPost}
+            >
+              Add Post page
+            </Button> */}
+
+            <AddPostModal />
+            
             <TableContainer component={Paper}>
-              <Table
-                sx={{ minWidth: 650 }}
-                size="small"
-                aria-label="a dense table"
-              >
-             {getting_posts ? 'loading....' :       <>
-                <TableHead>
-                  <TableRow>
-                   
-                    <TableCell >id</TableCell>
-                    <TableCell >userId</TableCell>
-                    <TableCell >title</TableCell>
-                    <TableCell >Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {posts && posts.length > 0 && posts.map((item : any) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.id}</TableCell>
-                      <TableCell>{item.userId}</TableCell>
-                      <TableCell>{item.title}</TableCell>
-                      <TableCell>--</TableCell>
-                     
-                    </TableRow>
-                  ))}
-                </TableBody>
-              
-                </>}
-                </Table>
-             
+              <Table size="small" aria-label="a dense table">
+                {getting_posts ? (
+                  "loading...."
+                ) : (
+                  <>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>id</TableCell>
+                        <TableCell>userId</TableCell>
+                        <TableCell>title</TableCell>
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {posts &&
+                        posts.length > 0 &&
+                        posts.map((item: any) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.id}</TableCell>
+                            <TableCell>{item.userId}</TableCell>
+                            <TableCell>{item.title}</TableCell>
+                            <TableCell>--</TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </>
+                )}
+              </Table>
             </TableContainer>
           </Container>
         </Box>

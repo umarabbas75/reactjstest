@@ -24,3 +24,26 @@ export const getAllPosts = () => {
         }
     }
 } 
+
+export const addPost = (postData:any) => {
+    return async (dispatch : any) => {
+        dispatch({
+            type: ActionType.ADDING_POST
+        });
+
+        try {
+            const { data } = await axios.post(`/posts`,postData);
+            console.log('added post',data);
+            dispatch({
+                type: ActionType.ADDING_POST_SUCCESS,
+                payload: data  
+            });
+
+        } catch(err) {
+            dispatch({
+                type: ActionType.ADDING_POST_FAIL,
+                payload: 'some error occured'
+            });
+        }
+    }
+} 

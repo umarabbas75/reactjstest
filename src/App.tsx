@@ -10,6 +10,7 @@ import { useTypedSelector } from './hooks/useTypeSelector';
 import Layout from './components/Layout'
 import Login from './views/Login'
 import Posts from './views/Posts'
+import AddPost from './views/AddPost'
 
 const RestrictedRoute = ({
   component: Component,
@@ -66,6 +67,11 @@ const App = () => {
           path="/Posts"
           token={token}
           component={Posts}
+        />
+        <PrivateRoute
+          path="/addPost"
+          token={token}
+          component={AddPost}
         />
       </Switch>
     </>
