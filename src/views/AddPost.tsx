@@ -93,7 +93,7 @@ export default function AddPost() {
               sx={{ mt: 3, mb: 2 }}
             >
                 Add Post
-                {adding_posts ? 'adding post....' : 'Add Post'}
+                {adding_posts ? 'Adding post....' : 'Add Post'}
             </Button>
           </Box>
         </Box>
