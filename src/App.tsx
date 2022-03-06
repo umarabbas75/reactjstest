@@ -6,43 +6,14 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch,
 } from "react-router-dom";
-import { useTypedSelector } from './hooks/useTypeSelector';
 import Layout from './components/Layout'
 import Login from './views/Login'
 import Posts from './views/Posts'
 import AddPost from './views/AddPost'
 import ViewPost from './views/ViewPost'
 
-const RestrictedRoute = ({
-  component: Component,
-  location,
-  token,
-  authUser,
-  permissions,
-  ...rest
-}: any) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) => {
-        if (token) {
-          return <Component {...props} />;
-        } else {
-          return (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: location },
-              }}
-            />
-          );
-        }
-      }}
-    />
-  );
-};
+
 
 const PrivateRoute = ({component: Component,token ,...rest}:any) => {
   return (
@@ -56,10 +27,9 @@ const PrivateRoute = ({component: Component,token ,...rest}:any) => {
 };
 
 const App = () => {
-  const match = useRouteMatch();
+
   const location = useLocation();
   const history = useHistory()
-  const {logInUser } = useTypedSelector((state) => state.auth);
   let token = localStorage.getItem('token')
 
 

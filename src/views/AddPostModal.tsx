@@ -33,7 +33,7 @@ const AddPostModal = () => {
     userId: string
   };
 
-  const addPostReq = async (postData: any) => {
+  const addPostReq = async (postData: FormValues) => {
     await dispatch(addPost(postData));
   };
   const editPostReq = async (postData: Post, postId: number) => {
@@ -56,10 +56,15 @@ const AddPostModal = () => {
     if (initialValues) {
       let data = {
         ...values,
-        id : initialValues.id
+        id : initialValues.id,
+        userId : parseInt(values.userId)
       }
       editPostReq(data, initialValues.id);
     } else {
+      let data = {
+        ...values,
+        userId : parseInt(values.userId)
+      }
       addPostReq(values);
     }
   };
@@ -150,6 +155,7 @@ const AddPostModal = () => {
                   onChange={onChange}
                   value={value}
                   margin="normal"
+                  type="number"
                   required
                   fullWidth
                   name="userId"

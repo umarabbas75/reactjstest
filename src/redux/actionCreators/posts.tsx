@@ -1,6 +1,18 @@
 import axios from '../../util/axios';
-import { Dispatch } from 'redux';
 import { ActionType } from '../actionTypes';
+
+interface addPostType {
+    title: string
+    body: string
+    userId: string
+}
+
+interface editPostType {
+    title: string
+    body: string
+    userId: string | number
+    id : string | number
+}
 
 export const getAllPosts = () => {
     return async (dispatch : any) => {
@@ -25,7 +37,7 @@ export const getAllPosts = () => {
     }
 } 
 
-export const addPost = (postData:any) => {
+export const addPost = (postData:addPostType) => {
     return async (dispatch : any) => {
         dispatch({
             type: ActionType.ADDING_POST
@@ -49,7 +61,7 @@ export const addPost = (postData:any) => {
 } 
 
 
-export const editPost = (postData:any,postId : any) => {
+export const editPost = (postData:editPostType,postId : number) => {
     return async (dispatch : any) => {
         dispatch({
             type: ActionType.UPDATING_POST
@@ -72,21 +84,25 @@ export const editPost = (postData:any,postId : any) => {
     }
 } 
 
-export const deletePost = (postId : any) => {
+export const deletePost = (postId : number) => {
     return async (dispatch : any) => {
         dispatch({
             type: ActionType.DELETING_POST
         });
 
         try {
-            const { data } = await axios.delete(`/posts/${postId}`);
-            console.log('deleted post',data);
-            dispatch({
-                type: ActionType.DELETING_POST_SUCCESS,
-                payload: data  
-            });
+            const {status} = await axios.delete(`/posts/${postId}`);
+           
+            if(status === 200){
+                dispatch({
+                    type: ActionType.DELETING_POST_SUCCESS,
+                    payload: postId  
+                });
+            }
+            
 
         } catch(err) {
+            console.log('======error========',err)
             dispatch({
                 type: ActionType.DELETING_POST_FAIL,
                 payload: 'some error occured'

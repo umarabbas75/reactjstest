@@ -8,7 +8,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getAllPosts } from "../redux/actionCreators/posts";
 import { useTypedSelector } from "../hooks/useTypeSelector";

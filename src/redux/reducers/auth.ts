@@ -4,7 +4,7 @@ const initialState = {
   logInUser: null,
 };
 
-export default (state = initialState, action: any) => {
+const auth = (state = initialState, action: any) => {
   switch (action.type) {
     case ActionType.LOGIN_USER: {
       let {token,...userInfo} = action.payload
@@ -27,3 +27,5 @@ export default (state = initialState, action: any) => {
       return state;
   }
 };
+
+export default auth

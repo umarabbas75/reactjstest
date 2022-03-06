@@ -29,7 +29,7 @@ const initialState = {
 export interface Post {
   body : string
   title : string
-  id : number | string
+  id : number 
   userId : number | string
 }
 
@@ -59,7 +59,7 @@ interface PostStateTypes {
   postId : number | null
 }
 
-export default (state : PostStateTypes = initialState, action: any) => {
+const posts = (state : PostStateTypes = initialState, action: any) => {
   switch (action.type) {
     case ActionType.GETTING_POST: {
       return {
@@ -98,6 +98,7 @@ export default (state : PostStateTypes = initialState, action: any) => {
         adding_post_succcess: true,
         adding_posts: false,
         posts: [...updatedPost],
+        filteredPosts : [...updatedPost],
       };
     }
     case ActionType.ADDING_POST_FAIL: {
@@ -122,6 +123,7 @@ export default (state : PostStateTypes = initialState, action: any) => {
         updating_post_succcess: true,
         adding_posts: false,
         posts: [...updatedPost],
+        filteredPosts : [...updatedPost],
       };
     }
     case ActionType.UPDATING_POST_FAIL: {
@@ -162,6 +164,7 @@ export default (state : PostStateTypes = initialState, action: any) => {
         deleting_post_succcess: true,
         deleting_posts: false,
         posts: [...updatedPost],
+        filteredPosts : [...updatedPost],
       };
     }
     case ActionType.DELETING_POST_FAIL: {
@@ -203,6 +206,8 @@ export default (state : PostStateTypes = initialState, action: any) => {
   }
 };
 
+export default posts
+
 const getUpdatedPost = (oldData: Post[], newData: Post) => {
   let newArray: Post[] = [];
   oldData.map((item: Post) => {
@@ -216,10 +221,11 @@ const getUpdatedPost = (oldData: Post[], newData: Post) => {
   return newArray;
 };
 
-const getUpdatedPostAfterDelete = (oldData: Post[], newData: Post) => {
+const getUpdatedPostAfterDelete = (oldData: Post[], postId: number) => {
+  console.log('========')
   let newArray :  Post[] = [];
     oldData.map((item:Post) => {
-        if (item.id !== newData.id) {
+        if (item.id !== postId) {
             newArray.push(item);
         }
         return item
