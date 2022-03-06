@@ -12,9 +12,16 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getAllPosts } from "../redux/actionCreators/posts";
 import { useTypedSelector } from "../hooks/useTypeSelector";
-import Button from "@mui/material/Button";
+
 import { useHistory } from "react-router-dom";
-import AddPostModal from './AddPostModal'
+import AddPostModal from "./AddPostModal";
+import EditIcon from "@mui/icons-material/Edit";
+
+import { ActionType } from "../redux/actionTypes/auth";
+import IconButton from "@mui/material/IconButton";
+import DeleteModal from "./DeleteModal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 export default function Album() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -26,9 +33,20 @@ export default function Album() {
     };
     fetchPosts();
   }, []);
-  const addPost = () => {
-    history.push("/addPost");
+
+  const openEditModal = (item: any) => {
+    dispatch({
+      type: ActionType.ADD_POST_MODAL_TOGGLE,
+      payload: item,
+    });
   };
+
+  const openDeleteModal = (item: any) =>{
+    dispatch({
+      type: ActionType.DELETE_POST_MODAL_TOGGLE,
+      payload: item,
+    });
+  }
 
   return (
     <>
@@ -50,7 +68,7 @@ export default function Album() {
             </Button> */}
 
             <AddPostModal />
-            
+
             <TableContainer component={Paper}>
               <Table size="small" aria-label="a dense table">
                 {getting_posts ? (
@@ -73,7 +91,27 @@ export default function Album() {
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.userId}</TableCell>
                             <TableCell>{item.title}</TableCell>
-                            <TableCell>--</TableCell>
+                            <TableCell>
+                              <IconButton>
+                                <EditIcon
+                                  onClick={() => {
+                                    openEditModal(item);
+                                  }}
+                                />
+                              </IconButton>
+
+                              <IconButton>
+                                <DeleteIcon onClick={() => {
+                                    openDeleteModal(item.id);
+                                  }} />
+                              </IconButton>
+                              <IconButton>
+                                <VisibilityIcon onClick={() => {
+                                    history.push({pathname : '/viewPost', state : item})
+                                  }} />
+                              </IconButton>
+                              
+                            </TableCell>
                           </TableRow>
                         ))}
                     </TableBody>
@@ -84,6 +122,8 @@ export default function Album() {
           </Container>
         </Box>
       </main>
+
+      <DeleteModal />
     </>
   );
 }

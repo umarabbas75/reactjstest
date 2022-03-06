@@ -11,6 +11,7 @@ import Layout from './components/Layout'
 import Login from './views/Login'
 import Posts from './views/Posts'
 import AddPost from './views/AddPost'
+import ViewPost from './views/ViewPost'
 
 const RestrictedRoute = ({
   component: Component,
@@ -72,6 +73,11 @@ const App = () => {
           path="/addPost"
           token={token}
           component={AddPost}
+        />
+         <PrivateRoute
+          path="/viewPost"
+          token={token}
+          component={ViewPost}
         />
       </Switch>
     </>

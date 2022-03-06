@@ -1,52 +1,86 @@
-import React from "react";
+import React , {useEffect} from "react";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../hooks/useTypeSelector";
 import { ActionType } from "../redux/actionTypes/auth";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { addPost } from "../redux/actionCreators/posts";
-
+import { addPost,editPost } from "../redux/actionCreators/posts";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 const AddPostModal = () => {
   const dispatch = useDispatch();
-  const { add_post_modal_visibiity,adding_post_succcess,adding_posts } = useTypedSelector((state) => state.posts);
+
+  const {
+    add_post_modal_visibiity,
+    adding_post_succcess,
+    adding_posts,
+    initialValues,
+    updating_post_succcess
+  } = useTypedSelector((state) => state.posts);
   const addPostModalToggle = () => {
     dispatch({
       type: ActionType.ADD_POST_MODAL_TOGGLE,
     });
   };
 
-  const addPostReq = async (postData : any) =>{
-    await  dispatch(addPost(postData));
-  } 
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    let postData =JSON.stringify({
-        title: data.get("title"),
-        body: data.get("body"),
-        userId: data.get("userId"),
-      })
-
-     
-      addPostReq(postData)
+  const addPostReq = async (postData: any) => {
+    await dispatch(addPost(postData));
+  };
+  const editPostReq = async (postData: any,postId : any) => {
+    await dispatch(editPost(postData,postId));
   };
 
-  if(adding_post_succcess){
+
+  console.log('========initialValues=========',initialValues)
+
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("title is required"),
+    body: Yup.string().required("body is required"),
+    userId: Yup.string().required("userId is required"),
+  });
+
+  const formOptions = {
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+  };
+
+  const { handleSubmit, reset, formState, control } = useForm(formOptions);
+  const { errors } = formState;
+  const onFinish = (values: any) => {
+
+  
+    if(initialValues){
+      editPostReq(values,values.id);
+    }
+    else{
+      addPostReq(values);
+    }
+    
+  };
+
+  useEffect(() => {
+    if(add_post_modal_visibiity && initialValues){
+      reset(initialValues)
+    }
+   }, [add_post_modal_visibiity])
+   
+
+  if (adding_post_succcess || updating_post_succcess) {
     //history.push('/Posts')
     dispatch({
-        type : ActionType.RESET_POST_STATES
+      type: ActionType.RESET_POST_STATES,
     });
-    addPostModalToggle()
+    addPostModalToggle();
+    reset();
   }
-
 
   return (
     <>
@@ -59,55 +93,68 @@ const AddPostModal = () => {
       </Button>
       <Dialog open={add_post_modal_visibiity} onClose={addPostModalToggle}>
         <DialogTitle>Add Post</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Fill below fields to create the new post
-          </DialogContentText>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="title"
-              label="Title"
-              name="title"
-              autoFocus
+        <Box component="form" onSubmit={handleSubmit(onFinish)} sx={{ mt: 1 }}>
+          <DialogContent>
+            <DialogContentText>
+              Fill below fields to create the new post
+            </DialogContentText>
+            <Controller
+              name={"title"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="title"
+                  label="Title"
+                  name="title"
+                  autoFocus
+                />
+              )}
             />
-             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="body"
-              label="body"
-              name="body"
-              
+            <Controller
+              name={"body"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="body"
+                  label="body"
+                  name="body"
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="userId"
-              label="User ID"
-              id="userId"
-
+            <Controller
+              name={"userId"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="userId"
+                  label="User ID"
+                  id="userId"
+                />
+              )}
             />
-
-            <Button
-            disabled={adding_posts}
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-                
-                {adding_posts ? 'adding post....' : 'Add Post'}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={addPostModalToggle}>Cancel</Button>
+            <Button type="submit" disabled={adding_posts}>
+              {adding_posts ? "adding post...." : "Add Post"}
             </Button>
-          </Box>
-        </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={addPostModalToggle}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
-        </DialogActions> */}
+          </DialogActions>
+        </Box>
       </Dialog>
     </>
   );
