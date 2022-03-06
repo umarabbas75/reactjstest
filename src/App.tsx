@@ -1,8 +1,10 @@
 
+import React , {useEffect} from "react";
 import {
   Redirect,
   Route,
   Switch,
+  useHistory,
   useLocation,
   useRouteMatch,
 } from "react-router-dom";
@@ -56,8 +58,22 @@ const PrivateRoute = ({component: Component,token ,...rest}:any) => {
 const App = () => {
   const match = useRouteMatch();
   const location = useLocation();
+  const history = useHistory()
   const {logInUser } = useTypedSelector((state) => state.auth);
   let token = localStorage.getItem('token')
+
+
+  useEffect(() => {
+    
+    if(location && location.pathname === '/' && !token){
+      history.push('/Login')
+    }
+    else if (location && location.pathname === '/' && token){
+      history.push('/Posts')
+    }
+
+  }, [location])
+  
 
   return (
     <>
