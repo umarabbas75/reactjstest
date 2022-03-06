@@ -2,6 +2,7 @@ import { ActionType } from "../actionTypes/auth";
 
 const initialState = {
   posts: [],
+  filteredPosts : [],
   getting_posts: false,
   getpost_Success: false,
   getpost_fail: false,
@@ -37,6 +38,7 @@ export default (state = initialState, action: any) => {
       return {
         ...state,
         posts: action.payload,
+        filteredPosts : action.payload,
         getting_posts: false,
         getpost_Success: true,
       };
@@ -137,6 +139,18 @@ export default (state = initialState, action: any) => {
       };
     }
 
+    case ActionType.FILTER_POST : {
+      let allPosts = [...state.posts]
+      const filteredPostsData = getFilteredPosts(action.payload,allPosts)
+
+      console.log('=====filteredPostsData=======',filteredPostsData)
+
+      return {
+        ...state,
+        filteredPosts :[...filteredPostsData],
+      }
+    }
+
     case ActionType.RESET_POST_STATES: {
       return {
         ...state,
@@ -182,3 +196,7 @@ const getUpdatedPostAfterDelete = (oldData: any, newData: any) => {
     })
     return newArray;
 };
+const getFilteredPosts = (searchQuery : any, posts : any)=>{
+  let filter = posts.filter((item:any)=>item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+  return filter
+}

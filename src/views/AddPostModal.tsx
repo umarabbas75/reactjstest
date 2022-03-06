@@ -88,7 +88,7 @@ const AddPostModal = () => {
     <>
       <Button
         variant="contained"
-        sx={{ marginBottom: "10px" }}
+       
         onClick={addPostModalToggle}
       >
         Add Post

@@ -25,6 +25,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import TablePagination from "@mui/material/TablePagination";
 import TableFooter from "@mui/material/TableFooter";
 import Spinner from "../components/Spinner"
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 export default function Album() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -34,10 +37,10 @@ export default function Album() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
 
-  const { getting_posts, posts } = useTypedSelector((state) => state.posts);
+  const { getting_posts, filteredPosts } = useTypedSelector((state) => state.posts);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredPosts.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -74,6 +77,14 @@ export default function Album() {
     });
   };
 
+  const searchPost = (e:any) =>{
+    console.log('========search=====',e.target.value)
+    dispatch({
+      type: ActionType.FILTER_POST,
+      payload: e.target.value,
+    });
+  }
+
   return (
     <>
       <main>
@@ -92,9 +103,19 @@ export default function Album() {
             >
               Add Post page
             </Button> */}
-
-            <AddPostModal />
-
+      <Box sx={{display : 'flex', alignItems : 'center', gap : 1,marginBottom : '10px'}}>
+      <AddPostModal />
+            <TextField
+          label="Search Post"
+          id="search-post"
+          onChange={searchPost}
+          size="small"
+          InputProps={{
+            endAdornment: <InputAdornment position="end"><SearchIcon/></InputAdornment>,
+          }}
+        />
+      </Box>
+           
             {getting_posts ? (
                   <Spinner color="primary" />
                 ) : (   <TableContainer component={Paper}>
@@ -110,12 +131,12 @@ export default function Album() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(posts && posts.length > 0 && rowsPerPage > 0
-                        ? posts.slice(
+                      {(filteredPosts && filteredPosts.length > 0 && rowsPerPage > 0
+                        ? filteredPosts.slice(
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                        : posts
+                        : filteredPosts
                       ).map((item: any) => (
                         <TableRow key={item.id}>
                           <TableCell>{item.id}</TableCell>
@@ -162,7 +183,7 @@ export default function Album() {
                       <TableRow>
                         <TablePagination
                           rowsPerPageOptions={[5, 10, 25]}
-                          count={posts.length}
+                          count={filteredPosts.length}
                           rowsPerPage={rowsPerPage}
                           page={page}
                           SelectProps={{
