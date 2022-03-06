@@ -10,6 +10,7 @@ import { useTypedSelector } from "../hooks/useTypeSelector";
 import { useDispatch } from "react-redux";
 import { ActionType } from "../redux/actionTypes/auth";
 import { deletePost } from "../redux/actionCreators/posts";
+import Spinner from "../components/Spinner"
 const DeleteModal = () => {
   const {
     delete_post_modal_visibiity,
@@ -59,8 +60,9 @@ const DeleteModal = () => {
           <Button onClick={handleClose} autoFocus>
             No
           </Button>
-          <Button disabled={deleting_posts} onClick={handleDelete}>
-            Yes
+          <Button variant="contained" disabled={deleting_posts} onClick={handleDelete}>
+            
+            {deleting_posts ? <><span>Deleting....</span><Spinner color="inherit" size={20}/></> : "Yes"}
           </Button>
         </DialogActions>
       </Dialog>

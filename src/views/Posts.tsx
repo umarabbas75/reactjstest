@@ -24,7 +24,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import TablePagination from "@mui/material/TablePagination";
 import TableFooter from "@mui/material/TableFooter";
-
+import Spinner from "../components/Spinner"
 export default function Album() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -95,11 +95,11 @@ export default function Album() {
 
             <AddPostModal />
 
-            <TableContainer component={Paper}>
+            {getting_posts ? (
+                  <Spinner color="primary" />
+                ) : (   <TableContainer component={Paper}>
               <Table size="small" aria-label="a dense table">
-                {getting_posts ? (
-                  "loading...."
-                ) : (
+                
                   <>
                     <TableHead>
                       <TableRow>
@@ -122,6 +122,16 @@ export default function Album() {
                           <TableCell>{item.userId}</TableCell>
                           <TableCell>{item.title}</TableCell>
                           <TableCell>
+                          <IconButton>
+                              <VisibilityIcon
+                                onClick={() => {
+                                  history.push({
+                                    pathname: "/viewPost",
+                                    state: item,
+                                  });
+                                }}
+                              />
+                            </IconButton>
                             <IconButton>
                               <EditIcon
                                 onClick={() => {
@@ -137,16 +147,7 @@ export default function Album() {
                                 }}
                               />
                             </IconButton>
-                            <IconButton>
-                              <VisibilityIcon
-                                onClick={() => {
-                                  history.push({
-                                    pathname: "/viewPost",
-                                    state: item,
-                                  });
-                                }}
-                              />
-                            </IconButton>
+                            
                           </TableCell>
                         </TableRow>
                       ))}
@@ -176,9 +177,9 @@ export default function Album() {
                       </TableRow>
                     </TableFooter>
                   </>
-                )}
+                
               </Table>
-            </TableContainer>
+            </TableContainer>)}
           </Container>
         </Box>
       </main>
