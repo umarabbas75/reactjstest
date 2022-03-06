@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../hooks/useTypeSelector";
-import { ActionType } from "../redux/actionTypes/auth";
+import { ActionType } from "../redux/actionTypes";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,11 +11,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { addPost, editPost } from "../redux/actionCreators/posts";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm,SubmitHandler  } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Spinner from "../components/Spinner";
-
+import {Post} from "../redux/reducers/posts"
 const AddPostModal = () => {
   const dispatch = useDispatch();
 
@@ -27,10 +27,16 @@ const AddPostModal = () => {
     updating_post_succcess,
   } = useTypedSelector((state) => state.posts);
 
+  interface FormValues {
+    title: string
+    body: string
+    userId: string
+  };
+
   const addPostReq = async (postData: any) => {
     await dispatch(addPost(postData));
   };
-  const editPostReq = async (postData: any, postId: any) => {
+  const editPostReq = async (postData: Post, postId: number) => {
     await dispatch(editPost(postData, postId));
   };
 
@@ -44,11 +50,15 @@ const AddPostModal = () => {
     resolver: yupResolver(validationSchema),
   };
 
-  const { handleSubmit, reset, formState, control } = useForm(formOptions);
+  const { handleSubmit, reset, formState, control } = useForm<FormValues>(formOptions);
   const { errors } = formState;
-  const onFinish = (values: any) => {
+  const onFinish : SubmitHandler<FormValues> = (values) => {
     if (initialValues) {
-      editPostReq(values, values.id);
+      let data = {
+        ...values,
+        id : initialValues.id
+      }
+      editPostReq(data, initialValues.id);
     } else {
       addPostReq(values);
     }
@@ -74,7 +84,6 @@ const AddPostModal = () => {
   }, [add_post_modal_visibiity]);
 
   if (adding_post_succcess || updating_post_succcess) {
-    //history.push('/Posts')
     dispatch({
       type: ActionType.RESET_POST_STATES,
     });
@@ -149,6 +158,22 @@ const AddPostModal = () => {
                 />
               )}
             />
+              {/* <Controller
+              name={"id"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="id"
+                  label="ID"
+                  id="id"
+                />
+              )}
+            /> */}
           </DialogContent>
           <DialogActions>
             <Button onClick={addPostModalToggle}>Cancel</Button>

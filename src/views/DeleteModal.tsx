@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { useTypedSelector } from "../hooks/useTypeSelector";
 import { useDispatch } from "react-redux";
-import { ActionType } from "../redux/actionTypes/auth";
+import { ActionType } from "../redux/actionTypes";
 import { deletePost } from "../redux/actionCreators/posts";
 import Spinner from "../components/Spinner"
 const DeleteModal = () => {

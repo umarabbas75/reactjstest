@@ -6,7 +6,7 @@ import { useTypedSelector } from "../hooks/useTypeSelector";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
-import { ActionType } from "../redux/actionTypes/auth";
+import { ActionType } from "../redux/actionTypes";
 
 const Layout = ({ children }: any) => {
   const dispatch = useDispatch();

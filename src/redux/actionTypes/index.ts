@@ -1,3 +1,5 @@
+import {Post} from '../reducers/posts'
+
 export enum ActionType {
   GETTING_POST = 'GETTING_POST',
   GETTING_POST_SUCCESS = 'GETTING_POST_SUCCESS',
@@ -25,3 +27,9 @@ export enum ActionType {
   LOGOUT_USER = 'LOGOUT_USER',
   RESET_LOGIN_STATES = 'RESET_LOGIN_STATES'
 }
+
+
+
+
+
+

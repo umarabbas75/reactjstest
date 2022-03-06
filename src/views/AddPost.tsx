@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { ActionType } from "../redux/actionTypes/auth";
+import { ActionType } from "../redux/actionTypes";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { useTypedSelector } from '../hooks/useTypeSelector';

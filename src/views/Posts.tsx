@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
 import AddPostModal from "./AddPostModal";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { ActionType } from "../redux/actionTypes/auth";
+import { ActionType } from "../redux/actionTypes";
 import IconButton from "@mui/material/IconButton";
 import DeleteModal from "./DeleteModal";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,7 +28,8 @@ import Spinner from "../components/Spinner"
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-export default function Album() {
+import {Post} from "../redux/reducers/posts"
+export default function ViewPosts() {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -63,22 +64,22 @@ export default function Album() {
     fetchPosts();
   }, []);
 
-  const openEditModal = (item: any) => {
+  const openEditModal = (item: Post) => {
+    
     dispatch({
       type: ActionType.ADD_POST_MODAL_TOGGLE,
       payload: item,
     });
   };
 
-  const openDeleteModal = (item: any) => {
+  const openDeleteModal = (item: number) => {
     dispatch({
       type: ActionType.DELETE_POST_MODAL_TOGGLE,
       payload: item,
     });
   };
 
-  const searchPost = (e:any) =>{
-    console.log('========search=====',e.target.value)
+  const searchPost = (e:React.ChangeEvent<HTMLInputElement>) =>{
     dispatch({
       type: ActionType.FILTER_POST,
       payload: e.target.value,

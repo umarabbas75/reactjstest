@@ -1,6 +1,6 @@
 import axios from '../../util/axios';
 import { Dispatch } from 'redux';
-import { ActionType } from '../actionTypes/auth';
+import { ActionType } from '../actionTypes';
 
 export const getAllPosts = () => {
     return async (dispatch : any) => {

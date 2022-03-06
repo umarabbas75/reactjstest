@@ -1,4 +1,4 @@
-import { ActionType } from "../actionTypes/auth";
+import { ActionType } from "../actionTypes";
 
 const initialState = {
   posts: [],
@@ -26,7 +26,40 @@ const initialState = {
   postId : null
 };
 
-export default (state = initialState, action: any) => {
+export interface Post {
+  body : string
+  title : string
+  id : number | string
+  userId : number | string
+}
+
+interface PostStateTypes {
+  posts: Post[]
+  filteredPosts:  Post[]
+  getting_posts: boolean
+  getpost_Success: boolean
+  getpost_fail: boolean
+
+  adding_post_succcess: boolean
+  adding_posts: boolean
+  adding_post_fail: boolean
+  add_post_modal_visibiity: boolean
+
+  updating_post_succcess: boolean
+  updating_posts: boolean
+  updating_post_fail: boolean
+
+  delete_post_modal_visibiity : boolean
+
+  deleting_post_succcess: boolean
+  deleting_posts: boolean
+  deleting_post_fail: boolean
+
+  initialValues: Post | null
+  postId : number | null
+}
+
+export default (state : PostStateTypes = initialState, action: any) => {
   switch (action.type) {
     case ActionType.GETTING_POST: {
       return {
@@ -142,9 +175,6 @@ export default (state = initialState, action: any) => {
     case ActionType.FILTER_POST : {
       let allPosts = [...state.posts]
       const filteredPostsData = getFilteredPosts(action.payload,allPosts)
-
-      console.log('=====filteredPostsData=======',filteredPostsData)
-
       return {
         ...state,
         filteredPosts :[...filteredPostsData],
@@ -173,9 +203,9 @@ export default (state = initialState, action: any) => {
   }
 };
 
-const getUpdatedPost = (oldData: any, newData: any) => {
-  let newArray: any = [];
-  oldData.map((item: any) => {
+const getUpdatedPost = (oldData: Post[], newData: Post) => {
+  let newArray: Post[] = [];
+  oldData.map((item: Post) => {
     if (item.id === newData.id) {
       newArray.push(newData);
     } else {
@@ -186,9 +216,9 @@ const getUpdatedPost = (oldData: any, newData: any) => {
   return newArray;
 };
 
-const getUpdatedPostAfterDelete = (oldData: any, newData: any) => {
-  let newArray : any = [];
-    oldData.map((item:any) => {
+const getUpdatedPostAfterDelete = (oldData: Post[], newData: Post) => {
+  let newArray :  Post[] = [];
+    oldData.map((item:Post) => {
         if (item.id !== newData.id) {
             newArray.push(item);
         }
@@ -196,7 +226,7 @@ const getUpdatedPostAfterDelete = (oldData: any, newData: any) => {
     })
     return newArray;
 };
-const getFilteredPosts = (searchQuery : any, posts : any)=>{
-  let filter = posts.filter((item:any)=>item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+const getFilteredPosts = (searchQuery : string, posts : Post[])=>{
+  let filter : Post[] = posts.filter((item:any)=>item.title.toLowerCase().includes(searchQuery.toLowerCase()))
   return filter
 }
